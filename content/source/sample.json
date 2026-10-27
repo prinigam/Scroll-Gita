@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "content_version": "0.0.1-sample",
+  "sample": true,
+  "sources": [
+    {
+      "id": "layout-fixture",
+      "title": "Original UI layout placeholders — not scripture or translations",
+      "author": "Scroll Gita project",
+      "url": null,
+      "license": "CC0-1.0",
+      "attribution": "Original non-scriptural test strings dedicated to CC0.",
+      "version": "1"
+    }
+  ],
+  "chapters": [
+    { "number": 1, "title": "Chapter 1 · layout preview", "verse_count": 47 },
+    { "number": 2, "title": "Chapter 2 · layout preview", "verse_count": 72 }
+  ],
+  "verses": [
+    {
+      "ref": "1.1",
+      "chapter": 1,
+      "verse": 1,
+      "sanskrit": "संस्कृत पाठ का स्थान\nयह केवल प्रदर्शन के लिए नमूना है।",
+      "source_id": "layout-fixture",
+      "transliteration": "Transliteration will appear here after source approval.",
+      "translations": {
+        "en": {
+          "text": "A quiet place to begin.\n\nThis is a layout preview. The licensed English translation will appear here; this text is not a verse from the Bhagavad Gita.",
+          "source_id": "layout-fixture"
+        },
+        "hi": {
+          "text": "यह केवल डिज़ाइन का नमूना है। स्वीकृत हिंदी अनुवाद यहाँ दिखाई देगा। यह भगवद्गीता का श्लोक नहीं है।",
+          "source_id": "layout-fixture"
+        }
+      }
+    },
+    {
+      "ref": "1.2",
+      "chapter": 1,
+      "verse": 2,
+      "sanskrit": "संस्कृत पाठ का स्थान\nयह शास्त्र का वास्तविक पाठ नहीं है।",
+      "source_id": "layout-fixture",
+      "transliteration": "Sample only — not a Sanskrit transliteration.",
+      "translations": {
+        "en": {
+          "text": "One page. A little more space.\n\nSwipe to explore the reading interaction. Production scripture and reviewed translations are pending source approval.",
+          "source_id": "layout-fixture"
+        },
+        "hi": {
+          "text": "अगला पृष्ठ देखने के लिए ऊपर स्वाइप करें। वास्तविक संस्कृत पाठ और अनुवाद स्रोत की स्वीकृति के बाद जोड़े जाएँगे।",
+          "source_id": "layout-fixture"
+        }
+      }
+    },
+    {
+      "ref": "2.47",
+      "chapter": 2,
+      "verse": 47,
+      "sanskrit": "लंबे पाठ के प्रदर्शन का नमूना\nपढ़ने के लिए पर्याप्त स्थान।\nबड़े अक्षरों में भी पूरा पाठ पढ़ें।",
+      "source_id": "layout-fixture",
+      "transliteration": "Long-text layout fixture. Not scripture.",
+      "translations": {
+        "en": {
+          "text": "Room for every line.\n\nThis deliberately longer placeholder helps us inspect wrapping and accessible reading sizes. The reader must keep every line available rather than truncate a verse.\n\nAt larger text sizes, use the on-screen reading controls to move between verses while scrolling within this page.\n\nNo translation or philosophical explanation is being asserted here.",
+          "source_id": "layout-fixture"
+        },
+        "hi": {
+          "text": "यह लंबे पाठ का नमूना है। बड़े अक्षरों में पूरा पाठ पढ़ने के लिए इस पृष्ठ के भीतर स्क्रॉल करें। अगले श्लोक पर जाने के लिए नीचे दिए गए बटन का उपयोग करें। यह किसी श्लोक का अनुवाद नहीं है।",
+          "source_id": "layout-fixture"
+        }
+      }
+    }
+  ]
+}

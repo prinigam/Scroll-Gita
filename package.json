@@ -1,0 +1,32 @@
+{
+  "name": "scroll-gita",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=24 <27"
+  },
+  "scripts": {
+    "mobile": "npm run start --workspace @scroll-gita/mobile",
+    "content:validate": "node content/scripts/validate.mjs",
+    "content:build": "node content/scripts/build.mjs",
+    "content:release": "node content/scripts/build.mjs --production",
+    "test:core": "node --test content/tests/*.test.mjs packages/storage/test/*.test.mjs",
+    "test:mobile": "npm run test --workspace @scroll-gita/mobile -- --runInBand",
+    "test": "npm run test:core && npm run test:mobile",
+    "typecheck": "npm run typecheck --workspace @scroll-gita/mobile",
+    "lint": "eslint apps/mobile/src packages/storage/src && prettier --check .",
+    "format": "prettier --write .",
+    "check": "npm run content:validate && npm run content:verify && npm run test && npm run typecheck && npm run lint",
+    "content:verify": "node content/scripts/verify.mjs"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "eslint": "^9.39.0",
+    "eslint-config-expo": "~58.0.0",
+    "prettier": "^3.6.2"
+  }
+}

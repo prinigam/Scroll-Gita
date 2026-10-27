@@ -1,0 +1,52 @@
+name: checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  mobile-content:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run content:verify
+      - run: npm run check
+      - run: npm run export:ios --workspace @scroll-gita/mobile
+        env:
+          CI: '1'
+  api:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    defaults:
+      run:
+        working-directory: services/api
+    env:
+      RAILS_ENV: test
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4.2'
+          bundler-cache: true
+          working-directory: services/api
+      - run: bin/rails db:prepare
+      - run: bin/rails db:migrate:redo
+      - run: bin/rails test
+      - run: bin/rails zeitwerk:check

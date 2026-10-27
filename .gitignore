@@ -1,0 +1,17 @@
+node_modules/
+.tools/
+.local/
+.bundle/
+.env
+.env.*
+!.env.example
+!.env.*.example
+.DS_Store
+coverage/
+dist/
+*.tsbuildinfo
+services/api/vendor/bundle/
+services/api/log/*
+services/api/tmp/*
+services/api/config/master.key
+services/api/config/credentials/*.key

@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "Gita \u00b7 Development",
+    "slug": "scroll-gita",
+    "version": "0.1.0",
+    "orientation": "default",
+    "scheme": "scrollgita",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.scrollgita.reader.dev"
+    },
+    "android": {
+      "package": "com.scrollgita.reader.dev"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      "expo-secure-store",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#F7F3EA",
+          "dark": {
+            "backgroundColor": "#171D19"
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
