@@ -7,3 +7,5 @@ There is no production scripture dataset in this repository yet. Every bundled s
 Production release is blocked until Sanskrit edition, English translation, Hindi translation, transliteration, and any commentary each have an approved source, author/editor, version, license text, attribution, commercial redistribution rights, and offline redistribution rights. Review font and audio licenses separately. Do not reuse competitors' translations, study notes, images, or branding.
 
 The production validator rejects fixture sources and requires full canonical coverage. Passing validation proves structural integrity, not legal permission or scholarly accuracy; both require review.
+
+A complete Hansi publisher corpus has now been evaluated locally. It remains unapproved and unbundled; see [observed terms](HANSI_TERMS_OBSERVED.md), the [unsent permission request](HANSI_PERMISSION_REQUEST.md), and [research/import report](../../docs/CONTENT_SOURCING.md). `release-approvals.json` contains no production approvals. A source URL or repository license string cannot approve a release on its own.

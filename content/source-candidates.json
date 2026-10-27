@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "researched_at": "2026-10-28",
+  "candidates": [
+    {
+      "id": "hansi-gita-corpus",
+      "status": "review-required",
+      "publisher": "Hansi Gita Bhawan Trust",
+      "download_url": "https://gitabhawan.org.in/data/gita-corpus.json",
+      "terms_url": "https://gitabhawan.org.in/gita/research",
+      "publisher_generated_date": "2026-09-17",
+      "sha256": "d95a8a26af966374a637c86c22849cb0335702a5158357f01e9b4aa7f4a01183",
+      "rights_summary": "Publisher claims original Hindi/English translations and permits reuse with attribution. Obtain explicit commercial offline redistribution terms before release.",
+      "editorial_status": "not-reviewed"
+    }
+  ]
+}

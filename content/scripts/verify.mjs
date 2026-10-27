@@ -17,6 +17,14 @@ assert.equal(manifest.sha256, createHash('sha256').update(bytes).digest('hex'));
 assert.equal(manifest.size_bytes, bytes.length);
 assert.equal(manifest.version, data.content_version);
 assert.equal(manifest.sample, data.sample);
+let approved = false;
+try {
+  validateContent(data, { production: true });
+  approved = true;
+} catch {
+  // The checked-in sample is intentionally ineligible for a production release.
+}
+assert.equal(manifest.production_approved, approved);
 const db = new DatabaseSync(new URL('gita_content.db', directory), {
   readOnly: true,
 });

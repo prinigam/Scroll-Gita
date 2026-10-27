@@ -1,3 +1,5 @@
+export * from './preferences.ts';
+
 export const USER_DATABASE_VERSION = 1;
 
 // These SQL statements are exercised with real SQLite by the Node integration tests.

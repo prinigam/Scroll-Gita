@@ -1,18 +1,22 @@
 import { useEffect, useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StateScreen } from '@/components/StateScreen';
 import type { Verse } from '@/repositories/reader';
 import { useReaderRepository } from '@/services/reader-context';
 import { useReaderStore } from '@/store/reader';
 import { usePalette } from '@/theme';
+import { BookmarkButton } from '@/components/BookmarkButton';
+import { VerseTransliteration } from '@/components/VerseTransliteration';
+import { useReaderTypography } from '@/theme/typography';
 
 export default function VerseDetails() {
   const { ref } = useLocalSearchParams<{ ref: string }>();
   const repository = useReaderRepository();
   const language = useReaderStore((state) => state.language);
   const colors = usePalette();
+  const typography = useReaderTypography();
   const [result, setResult] = useState<{
     verse: Verse | null;
     sample: boolean;
@@ -64,25 +68,33 @@ export default function VerseDetails() {
             Layout sample · not scripture or a translation
           </Text>
         )}
-        <Text style={[styles.sanskrit, { color: colors.text }]}>
+        <Text style={[typography.sanskrit, { color: colors.text }]}>
           {result.verse.sanskrit}
         </Text>
-        <Text style={[styles.translation, { color: colors.text }]}>
+        <VerseTransliteration
+          verseRef={result.verse.ref}
+          text={result.verse.transliteration}
+          align="left"
+        />
+        <Text style={[typography.translation, { color: colors.text }]}>
           {result.verse.translation}
         </Text>
+        <View style={{ alignItems: 'flex-start' }}>
+          <BookmarkButton verseRef={result.verse.ref} />
+        </View>
         <Text
           accessibilityRole="header"
           style={[styles.title, { color: colors.text }]}
         >
           Deep Study
         </Text>
-        <Text style={[styles.body, { color: colors.muted }]}>
+        <Text style={[typography.body, { color: colors.muted }]}>
           Reviewed meaning, Sanskrit terms, context, practical application, and
           related verses will appear here after content approval. No explanation
           has been generated for this preview.
         </Text>
         {result.sample && (
-          <Text style={[styles.body, { color: colors.muted }]}>
+          <Text style={[typography.body, { color: colors.muted }]}>
             Source: original non-scriptural layout fixtures, Scroll Gita
             project, version 1, CC0-1.0.
           </Text>
@@ -95,8 +107,5 @@ const styles = StyleSheet.create({
   content: { padding: 28, gap: 28 },
   reference: { fontSize: 11, letterSpacing: 2 },
   notice: { fontSize: 13, lineHeight: 21, padding: 16, borderRadius: 12 },
-  sanskrit: { fontSize: 27, lineHeight: 43 },
-  translation: { fontSize: 20, lineHeight: 31 },
   title: { fontSize: 25, fontWeight: '600', marginTop: 8 },
-  body: { fontSize: 17, lineHeight: 27 },
 });

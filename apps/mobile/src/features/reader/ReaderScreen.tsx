@@ -9,6 +9,7 @@ import {
   View,
   type FlatListProps,
 } from 'react-native';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { VerseCard } from '@/components/VerseCard';
 import { StateScreen } from '@/components/StateScreen';
@@ -16,11 +17,14 @@ import type { Verse } from '@/repositories/reader';
 import { useReaderRepository } from '@/services/reader-context';
 import { useReaderStore } from '@/store/reader';
 import { usePalette } from '@/theme';
+import { readerTextScale } from '@scroll-gita/storage';
 
 export function ReaderScreen() {
   const repository = useReaderRepository();
   const colors = usePalette();
+  const router = useRouter();
   const language = useReaderStore((state) => state.language);
+  const textSize = useReaderStore((state) => state.textSize);
   const [verses, setVerses] = useState<Verse[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [height, setHeight] = useState(0);
@@ -31,9 +35,11 @@ export function ReaderScreen() {
   const [screenReader, setScreenReader] = useState(false);
   const [sample, setSample] = useState(true);
   const list = useRef<FlatList<Verse>>(null);
-  const writes = useRef(Promise.resolve());
+  const session = useRef(0);
+  const [loadedSession, setLoadedSession] = useState(0);
   const { fontScale, width } = useWindowDimensions();
-  const accessiblePaging = screenReader || fontScale > 1.25;
+  const accessiblePaging =
+    screenReader || fontScale * readerTextScale(textSize) > 1.25;
   useEffect(() => {
     void AccessibilityInfo.isScreenReaderEnabled().then(setScreenReader);
     const subscription = AccessibilityInfo.addEventListener(
@@ -42,43 +48,50 @@ export function ReaderScreen() {
     );
     return () => subscription.remove();
   }, []);
-  useEffect(() => {
-    let active = true;
-    void (async () => {
-      // Finish queued writes before reading the saved position during a language change.
-      await writes.current;
-      const [rows, ref, metadata] = await Promise.all([
-        repository.getVerses(language),
-        repository.getProgress(),
-        repository.validateContent(),
-      ]);
-      const index = Math.max(
-        0,
-        rows.findIndex((row) => row.ref === ref),
-      );
-      if (active) {
-        setVerses(rows);
-        setCurrentIndex(index);
-        setSample(metadata.sample);
-        setReady(true);
-      }
-    })().catch(() => {
-      if (active) setError(true);
-    });
-    return () => {
-      active = false;
-    };
-  }, [repository, language, attempt]);
+  useFocusEffect(
+    useCallback(() => {
+      let active = true;
+      const loadingSession = ++session.current;
+      setReady(false);
+      void (async () => {
+        const [rows, ref, metadata] = await Promise.all([
+          repository.getVerses(language),
+          repository.getProgress(),
+          repository.validateContent(),
+        ]);
+        const index = Math.max(
+          0,
+          rows.findIndex((row) => row.ref === ref),
+        );
+        if (active) {
+          setVerses(rows);
+          setCurrentIndex(index);
+          setSample(metadata.sample);
+          setLoadedSession(loadingSession);
+          setReady(true);
+        }
+      })().catch(() => {
+        if (active) setError(true);
+      });
+      return () => {
+        active = false;
+        session.current++;
+      };
+      // The counter deliberately reloads this focus effect after a retry.
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [repository, language, attempt]),
+  );
 
   const savePosition = useCallback(
     (verse: Verse) => {
+      if (session.current !== loadedSession) return;
       setCurrentIndex(verse.position);
-      writes.current = writes.current
-        .then(() => repository.saveProgress(verse.ref))
+      void repository
+        .saveProgress(verse.ref)
         .then(() => setWriteError(false))
         .catch(() => setWriteError(true));
     },
-    [repository],
+    [repository, loadedSession],
   );
   const onViewableItemsChanged = useCallback<
     NonNullable<FlatListProps<Verse>['onViewableItemsChanged']>
@@ -128,12 +141,25 @@ export function ReaderScreen() {
       style={[styles.screen, { backgroundColor: colors.background }]}
     >
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <View>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Browse chapters"
+          onPress={() => router.push('/chapters')}
+          style={styles.chapterLink}
+        >
           <Text style={[styles.brand, { color: colors.text }]}>GITA</Text>
           <Text style={[styles.subtitle, { color: colors.muted }]}>
-            A LITTLE SPACE WITHIN
+            Chapters ⌄
           </Text>
-        </View>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Open saved verses"
+          onPress={() => router.push('/bookmarks')}
+          style={[styles.libraryLink, { backgroundColor: colors.surface }]}
+        >
+          <Text style={{ color: colors.accent }}>Saved ↗</Text>
+        </Pressable>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={
@@ -147,6 +173,14 @@ export function ReaderScreen() {
           <Text style={{ color: colors.text }}>
             {language === 'en' ? 'EN / हिन्दी' : 'हिन्दी / EN'}
           </Text>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Open reader settings"
+          onPress={() => router.push('/settings')}
+          style={[styles.settings, { borderColor: colors.border }]}
+        >
+          <Text style={{ color: colors.text, fontSize: 22 }}>⚙︎</Text>
         </Pressable>
       </View>
       {sample && (
@@ -169,12 +203,13 @@ export function ReaderScreen() {
         </Text>
       )}
       <View
+        testID="verse-feed"
         style={styles.feed}
         onLayout={(event) => setHeight(event.nativeEvent.layout.height)}
       >
         {height > 0 && (
           <FlatList
-            key={`${language}-${height}-${width}`}
+            key={`${loadedSession}-${height}-${width}`}
             ref={list}
             data={verses}
             renderItem={({ item }) => (
@@ -203,7 +238,18 @@ export function ReaderScreen() {
           />
         )}
       </View>
-      <View style={[styles.footer, { borderTopColor: colors.border }]}>
+      {accessiblePaging && (
+        <Text style={[styles.readingHint, { color: colors.muted }]}>
+          Scroll to read. Use Previous / Next to change verses.
+        </Text>
+      )}
+      <View
+        style={[
+          styles.footer,
+          fontScale > 1.75 && styles.footerLarge,
+          { borderTopColor: colors.border },
+        ]}
+      >
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Previous verse"
@@ -234,17 +280,42 @@ export function ReaderScreen() {
 }
 const styles = StyleSheet.create({
   screen: { flex: 1 },
+  chapterLink: { minHeight: 44, justifyContent: 'center', flexShrink: 1 },
+  libraryLink: {
+    minHeight: 44,
+    padding: 12,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   header: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 24,
-    paddingVertical: 18,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    gap: 12,
+    gap: 8,
+  },
+  settings: {
+    minHeight: 44,
+    minWidth: 44,
+    padding: 6,
+    borderRadius: 22,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  readingHint: {
+    fontSize: 12,
+    lineHeight: 19,
+    textAlign: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
   },
   brand: { fontSize: 23, fontWeight: '600', letterSpacing: 6 },
-  subtitle: { fontSize: 8, letterSpacing: 1.5, marginTop: 6 },
+  subtitle: { fontSize: 11, marginTop: 6 },
   language: {
     minHeight: 44,
     minWidth: 88,
@@ -265,11 +336,18 @@ const styles = StyleSheet.create({
   feed: { flex: 1 },
   footer: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     borderTopWidth: StyleSheet.hairlineWidth,
   },
-  control: { minHeight: 52, justifyContent: 'center', paddingHorizontal: 8 },
-  counter: { fontSize: 11, letterSpacing: 1 },
+  footerLarge: { flexDirection: 'column', alignItems: 'stretch' },
+  control: {
+    minHeight: 52,
+    justifyContent: 'center',
+    paddingHorizontal: 8,
+    maxWidth: '100%',
+  },
+  counter: { fontSize: 11, letterSpacing: 1, textAlign: 'center' },
 });

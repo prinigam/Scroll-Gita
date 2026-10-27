@@ -1,4 +1,6 @@
 import { useColorScheme } from 'react-native';
+import { resolveTheme } from '@scroll-gita/storage';
+import { useReaderStore } from '@/store/reader';
 
 export const palettes = {
   light: {
@@ -19,6 +21,11 @@ export const palettes = {
   },
 };
 export type Palette = typeof palettes.light;
+export function useResolvedTheme() {
+  const preference = useReaderStore((state) => state.theme);
+  const system = useColorScheme();
+  return resolveTheme(preference, system);
+}
 export function usePalette() {
-  return palettes[useColorScheme() === 'dark' ? 'dark' : 'light'];
+  return palettes[useResolvedTheme()];
 }

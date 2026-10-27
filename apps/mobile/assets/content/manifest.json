@@ -4,6 +4,7 @@
   "sample": true,
   "version": "0.0.1-sample",
   "schema_version": 1,
+  "production_approved": false,
   "sha256": "fe3cef8cc412650b441e5c1901a92e46a52de4d0d044362d446ed45823521b75",
   "size_bytes": 53248
 }

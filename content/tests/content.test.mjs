@@ -50,6 +50,7 @@ test('generated SQLite joins translations in canonical order and records provena
   try {
     const path = join(directory, 'content.db');
     const manifest = buildContent(fixture(), path);
+    assert.equal(manifest.production_approved, false);
     assert.equal(manifest.sha256.length, 64);
     const db = new DatabaseSync(path, { readOnly: true });
     try {

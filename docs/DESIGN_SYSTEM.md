@@ -19,7 +19,7 @@ Spacing scale: 4, 8, 12, 16, 24, 32, 40. Minimum interactive target 44×44 point
 
 ## Typography
 
-Use platform fonts in the prototype; verify Devanagari shaping on physical iPhones. Starting sizes: Sanskrit 27/43, translation 20/31, metadata 11. Allow font scaling and full wrapping; no `numberOfLines` truncation on scripture. Select and bundle a licensed Devanagari font only after visual and license review. Transliteration and vocabulary views come in later milestones.
+Use platform fonts in the prototype; verify Devanagari shaping on physical iPhones. Starting sizes: Sanskrit 27/43, translation 20/31, metadata 11. Allow font scaling and full wrapping; no `numberOfLines` truncation on scripture. Select and bundle a licensed Devanagari font only after visual and license review. [Reader settings](READER_SETTINGS.md) add Standard/Large/Extra large verse sizes, supplied transliteration and System/Light/Dark appearance. Vocabulary views come in later milestones.
 
 ## Reader composition
 

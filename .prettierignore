@@ -4,6 +4,7 @@ node_modules
 package-lock.json
 apps/mobile/assets
 apps/mobile/.expo
+**/expo-env.d.ts
 apps/mobile/dist
 services/api
 coverage

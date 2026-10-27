@@ -33,7 +33,7 @@ npm run start --workspace @scroll-gita/mobile -- --go
 
 If your Expo Go does not support SDK 58, use an SDK-58 development build. `npm run ios --workspace @scroll-gita/mobile` opens an existing compatible simulator build and requires Xcode. Building native binaries requires Xcode locally (`npx expo run:ios`) or an authorized EAS setup. No remote builds have been submitted. The development EAS profile targets a simulator; preview targets physical internal distribution.
 
-The prototype supports vertical paging, an English/Hindi control, system light/dark mode, local progress and explicit next/previous navigation. It visibly labels all fixture content. The reader can open a local verse-details/study route; reviewed explanations are pending content approval. Bookmarks, AI, onboarding, subscriptions and chapter navigation are subsequent milestones.
+The prototype supports vertical paging, an English/Hindi control, local progress and explicit next/previous navigation. It visibly labels all fixture content. The reader can open a local verse-details/study route; reviewed explanations are pending content approval. Offline chapter navigation and bookmarks are implemented; see [the library milestone and iPhone checklist](docs/OFFLINE_LIBRARY.md). The gear button opens [persisted reader settings](docs/READER_SETTINGS.md): language, System/Light/Dark appearance, verse text size and supplied transliteration. AI, onboarding and subscriptions are subsequent milestones.
 
 ## Rails API
 

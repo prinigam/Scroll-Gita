@@ -6,8 +6,11 @@ const manifest = JSON.parse(
     'utf8',
   ),
 );
-if (process.env.EAS_BUILD_PROFILE === 'production' && manifest.sample) {
+if (
+  process.env.EAS_BUILD_PROFILE === 'production' &&
+  (manifest.sample || manifest.production_approved !== true)
+) {
   throw new Error(
-    'Production build blocked: approved, complete scripture content is required. The bundled release contains layout fixtures.',
+    'Production build blocked: complete scripture content with recorded rights and editorial approval is required.',
   );
 }

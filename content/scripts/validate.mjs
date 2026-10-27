@@ -1,6 +1,7 @@
 import Ajv from 'ajv';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { requireReleaseApproval } from './approval.mjs';
 
 export const chapterCounts = [
   47, 72, 43, 42, 29, 47, 30, 28, 34, 42, 55, 20, 34, 27, 20, 24, 28, 78,
@@ -10,7 +11,7 @@ const schema = JSON.parse(
 );
 const checkSchema = new Ajv({ allErrors: true }).compile(schema);
 
-export function validateContent(data, { production = false } = {}) {
+export function validateContent(data, { production = false, approvals } = {}) {
   if (!checkSchema(data))
     throw new Error(`Schema validation: ${JSON.stringify(checkSchema.errors)}`);
   const fail = (message) => {
@@ -69,6 +70,7 @@ export function validateContent(data, { production = false } = {}) {
       }
     });
   }
+  if (production) requireReleaseApproval(data, approvals);
   return {
     verses: seen.size,
     chapters: chapters.size,

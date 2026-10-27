@@ -1,5 +1,11 @@
 # Sprint 1 validation and review
 
+This records the foundation milestone. The user subsequently confirmed the base reader, language switching, details navigation and restored position on an iPhone. See [offline navigation and bookmarks](OFFLINE_LIBRARY.md) for the next milestone and its separate device-review checklist.
+
+## Reader settings follow-up
+
+The settings milestone adds persisted language, System/Light/Dark appearance, verse sizes and supplied transliteration. `npm run check` passes: 24 real-SQLite/content tests, 24 mobile tests, strict TypeScript, ESLint, Prettier and bundled content verification. The iOS JavaScript/Hermes export also passes with the sample database bundled. No Rails code changed. Physical iPhone layout, Dynamic Type and VoiceOver verification for these changes remain pending; see [the settings checklist](READER_SETTINGS.md).
+
 ## Scope delivered
 
 Engineering/design documents, research record, npm monorepo, Expo SDK 58 reader scaffold, Rails API scaffold, PostgreSQL configuration, real SQLite schemas, transactional user migration initialization, fixture validation/generation, checksum manifest, repository persistence tests, mobile component tests and CI configuration.

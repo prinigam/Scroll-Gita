@@ -19,9 +19,13 @@ export function ReaderProvider({ children }: { children: ReactNode }) {
       userDatabase = await openUserDatabase();
       const reader = new ReaderRepository(content, userDatabase);
       await reader.validateContent();
-      const language = await reader.getLanguage();
+      const [preferences, bookmarkRefs] = await Promise.all([
+        reader.getPreferences(),
+        reader.getBookmarkRefs(),
+      ]);
       if (active) {
-        useReaderStore.getState().setLanguage(language);
+        useReaderStore.getState().applyPreferences(preferences);
+        useReaderStore.getState().setBookmarkRefs(bookmarkRefs);
         setRepository(reader);
       }
     }

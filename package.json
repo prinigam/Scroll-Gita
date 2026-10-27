@@ -21,7 +21,8 @@
     "lint": "eslint apps/mobile/src packages/storage/src && prettier --check .",
     "format": "prettier --write .",
     "check": "npm run content:validate && npm run content:verify && npm run test && npm run typecheck && npm run lint",
-    "content:verify": "node content/scripts/verify.mjs"
+    "content:verify": "node content/scripts/verify.mjs",
+    "content:review": "node content/scripts/review-hansi.mjs"
   },
   "devDependencies": {
     "ajv": "^8.17.1",

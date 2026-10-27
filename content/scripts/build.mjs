@@ -58,9 +58,17 @@ export function buildContent(data, destination, options = {}) {
   }
   renameSync(temporary, destination);
   const buffer = readFileSync(destination);
+  let productionApproved = false;
+  try {
+    validateContent(data, { ...options, production: true });
+    productionApproved = true;
+  } catch {
+    // Development builds may use fixtures or review candidates; production may not.
+  }
   return {
     ...summary,
     schema_version: 1,
+    production_approved: productionApproved,
     sha256: createHash('sha256').update(buffer).digest('hex'),
     size_bytes: buffer.length,
   };
